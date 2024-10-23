@@ -21,10 +21,10 @@ module "ntc_r53_spacelift_nuvibit_dev" {
     {
       # placeholder APEX record will be replaced with ALB alias record
       name = ""
-      type = "CNAME"
+      type = "A"
       ttl  = 300
       values = [
-        "nuvibit.app.spacelift.io"
+        "53.53.53.53"
       ]
     }
   ]
