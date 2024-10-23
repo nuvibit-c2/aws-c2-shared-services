@@ -19,11 +19,12 @@ module "ntc_r53_spacelift_nuvibit_dev" {
   # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html
   dns_records = [
     {
+      # placeholder APEX record will be replaced with ALB alias record
       name = ""
       type = "CNAME"
       ttl  = 300
       values = [
-        "https://xkcd.com/1361/"
+        "nuvibit.app.spacelift.io"
       ]
     }
   ]
