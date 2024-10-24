@@ -46,3 +46,20 @@ resource "aws_route53_record" "spacelift" {
 resource "aws_acm_certificate_validation" "spacelift" {
   certificate_arn = aws_acm_certificate.spacelift.arn
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ¦ NTC SPACELIFT ADMINISTRATION - WORKER POOL
+# ---------------------------------------------------------------------------------------------------------------------
+module "ntc_spacelift_administration" {
+  source  = "spacelift.io/nuvibit/ntc-administration/spacelift"
+  version = "1.0.0"
+
+    private_worker_pools = [
+    {
+      pool_name        = "self-hosted-workers"
+      pool_description = "spacelift self-hosted worker pool"
+      space_path       = "/root"
+      labels           = []
+    }
+  ]
+}

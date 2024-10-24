@@ -21,6 +21,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
+# credentials set as env vars in stack
+provider "spacelift" {}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
@@ -32,6 +35,10 @@ terraform {
       source                = "hashicorp/aws"
       version               = "~> 5.0"
       configuration_aliases = []
+    }
+    spacelift = {
+      source  = "spacelift-io/spacelift"
+      version = "~> 1.0"
     }
   }
 }
