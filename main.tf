@@ -21,8 +21,11 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# credentials set as env vars in stack
-provider "spacelift" {}
+provider "spacelift" {
+  api_key_endpoint = "https://spacelift.nuvibit.dev"
+  api_key_id       = "01JAZ0E21AXPEZEFCGP4SCCNN1"
+  api_key_secret   = var.spacelift_admin_token
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ REQUIREMENTS

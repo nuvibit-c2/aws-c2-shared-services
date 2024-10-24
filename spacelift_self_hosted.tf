@@ -54,7 +54,7 @@ module "ntc_spacelift_administration" {
   source  = "spacelift.io/nuvibit/ntc-administration/spacelift"
   version = "1.0.0"
 
-    private_worker_pools = [
+  private_worker_pools = [
     {
       pool_name        = "self-hosted-workers"
       pool_description = "spacelift self-hosted worker pool"
