@@ -12,3 +12,8 @@ output "account_id" {
 #   description = "Map of all ntc parameters"
 #   value       = local.ntc_parameters
 # }
+
+output "spacelift_cert_arn" {
+  description = "ARN of certificate used for Spacelift deployment"
+  value       = aws_acm_certificate.spacelift.arn
+}
