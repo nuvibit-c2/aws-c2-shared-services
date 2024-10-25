@@ -1,0 +1,83 @@
+{
+  "account_name": "nuvibit-dev",
+  "aws_region": "eu-central-1",
+  "database": {
+    "delete_protection_enabled": true,
+    "instance_class": "db.t4g.large"
+  },
+  "load_balancer": {
+    "certificate_arn": "arn:aws:acm:eu-central-1:183295411930:certificate/b0480368-5a5f-4b8b-afa7-bc0cdce11448",
+    "scheme": "internet-facing",
+    "ssl_policy": "ELBSecurityPolicy-TLS-1-2-2017-01",
+    "tag": {
+      "key": "",
+      "value": ""
+    }
+  },
+  "proxy_config": {
+    "http_proxy": "",
+    "https_proxy": "",
+    "no_proxy": ""
+  },
+  "spacelift_hostname": "spacelift.nuvibit.dev",
+  "slack_config": {
+    "enabled": false,
+    "client_id": "",
+    "client_secret": "",
+    "signing_secret": ""
+  },
+  "sso_config": {
+    "admin_login": "stefano.franco@nuvibit.com",
+    "sso_type": "SAML",
+    "oidc_args": {
+      "client_id": "",
+      "client_credentials": "",
+      "identity_provider_host": "https://"
+    },
+    "saml_args": {
+      "metadata": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><md:EntityDescriptor xmlns:md=\"urn:oasis:names:tc:SAML:2.0:metadata\" entityID=\"https://portal.sso.eu-central-1.amazonaws.com/saml/assertion/MjI4MTIwNDQwMzUyX2lucy1kNjEyYTU5NGYzOTFhNzE5\">\n  <md:IDPSSODescriptor WantAuthnRequestsSigned=\"false\" protocolSupportEnumeration=\"urn:oasis:names:tc:SAML:2.0:protocol\">\n    <md:KeyDescriptor use=\"signing\">\n      <ds:KeyInfo xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">\n        <ds:X509Data>\n          <ds:X509Certificate>MIIDBzCCAe+gAwIBAgIFAM3OKWIwDQYJKoZIhvcNAQELBQAwRTEWMBQGA1UEAwwNYW1hem9uYXdzLmNvbTENMAsGA1UECwwESURBUzEPMA0GA1UECgwGQW1hem9uMQswCQYDVQQGEwJVUzAeFw0yNDEwMjQwODA4MTNaFw0yOTEwMjQwODA4MTNaMEUxFjAUBgNVBAMMDWFtYXpvbmF3cy5jb20xDTALBgNVBAsMBElEQVMxDzANBgNVBAoMBkFtYXpvbjELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDKkcynuEdCPsMGIoZDg8BgoNUTi5HUzPnzBGkyR8rDfi1mIGYJdp8+qZYNFg1kfotcSyegGiKQLWGRhR/OkkkwA5ViJNLdEVYzrN9n9u5H5+w32k8gK2xiHv/cwfD+scgFRMDy9tdadWjhkha/RgeBuk9/zrgEm11FDCL1LRUhzCBJlBjkcyrBJwryQV4EYxWligV+gL6cSmXkB3UgkxvCwv907D7pZkhVRH47/n6kexYN/HTGUF+1LViWtwJC36juG85ecprz5BHv0RWRF1ODOfwiUx4/WDiLRQRs00UIfU8+JuyUL4CqPLRuY/8qsbh6zJC4phb4IN9ZIspLsyzhAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAH6k49NLeAq/IhM5QexnKppIwn2AtOH8oQS0wxHUa2gfHx1YtYfsSUvsWoGN85VgeXMCeDe8DXAPqJUXQ+V0DEADcBkDji0gjclEv23DQjGFWDTlh36YrD5iBmVP+OtFbMeKD1LOZzDXH5QuV1j2m/6CdwXfylW549DHmJCDlNpnEG/ponwK4JH5qiLnTNmdbMlcJrkgW6zpuGF0bisz0ZoJau4sRz9gsFSprLez5Vqym8xMsL1K16FZHbGjZNtzhXq5y5+djUrmNSBMe4tpBlqOtUg8aEKQb8Gj0cJVURYWWlnK3pThfSHujv8Xtt9iEcgUr1J9sT3EAuzeuA0aEh8=</ds:X509Certificate>\n        </ds:X509Data>\n      </ds:KeyInfo>\n    </md:KeyDescriptor>\n    <md:SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://portal.sso.eu-central-1.amazonaws.com/saml/logout/MjI4MTIwNDQwMzUyX2lucy1kNjEyYTU5NGYzOTFhNzE5\"/>\n    <md:SingleLogoutService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\" Location=\"https://portal.sso.eu-central-1.amazonaws.com/saml/logout/MjI4MTIwNDQwMzUyX2lucy1kNjEyYTU5NGYzOTFhNzE5\"/>\n    <md:NameIDFormat/>\n    <md:SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Location=\"https://portal.sso.eu-central-1.amazonaws.com/saml/assertion/MjI4MTIwNDQwMzUyX2lucy1kNjEyYTU5NGYzOTFhNzE5\"/>\n    <md:SingleSignOnService Binding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect\" Location=\"https://portal.sso.eu-central-1.amazonaws.com/saml/assertion/MjI4MTIwNDQwMzUyX2lucy1kNjEyYTU5NGYzOTFhNzE5\"/>\n  </md:IDPSSODescriptor>\n</md:EntityDescriptor>\n",
+      "dynamic": false,
+      "name_id_format": "TRANSIENT"
+    }
+  },
+  "tls_config": {
+    "server_certificate_secrets_manager_arn": "",
+    "ca_certificates": []
+  },
+  "vpc_config": {
+    "use_custom_vpc": false,
+    "vpc_id": "",
+    "private_subnet_ids": "",
+    "public_subnet_ids": "",
+    "drain_security_group_id": "",
+    "load_balancer_security_group_id": "",
+    "server_security_group_id": "",
+    "installation_task_security_group_id": "",
+    "database_security_group_id": "",
+    "availability_zones": ""
+  },
+  "alerting": {
+    "sns_topic_arn": ""
+  },
+  "global_resource_tags": [
+    {
+      "key": "platform",
+      "value": "Spacelift"
+    },
+    {
+      "key":  "type",
+      "value": "self-hosted"
+    }
+  ],
+  "s3_config": {
+    "run_logs_expiration_days": 60,
+    "deliveries_bucket_expiration_days": 1,
+    "large_queue_messages_bucket_expiration_days": 2,
+    "metadata_bucket_expiration_days": 2,
+    "policy_inputs_bucket_expiration_days": 2,
+    "uploads_bucket_expiration_days": 1,
+    "user_uploaded_workspaces_bucket_expiration_days": 1,
+    "workspaces_bucket_expiration_days": 7,
+    "access_logs_bucket_expiration_days": 7
+  }
+}
