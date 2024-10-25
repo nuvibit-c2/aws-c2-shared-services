@@ -181,13 +181,32 @@ resource "aws_security_group" "private_workers" {
 module "spacelift_private_workers" {
   source = "github.com/nuvibit/terraform-aws-spacelift-workerpool-on-ec2?ref=fix-opt-in-region"
 
-  configuration = <<-EOT
-    export SPACELIFT_TOKEN=$(aws secretsmanager get-secret-value --secret-id "${aws_secretsmanager_secret.spacelift_credentials["SPACELIFT_TOKEN"].id}" --query SecretString --region eu-central-1 --output text)
-    export SPACELIFT_POOL_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id "${aws_secretsmanager_secret.spacelift_credentials["SPACELIFT_POOL_PRIVATE_KEY"].id}" --query SecretString --region eu-central-1 --output text)
-    export SPACELIFT_SENSITIVE_OUTPUT_UPLOAD_ENABLED=true
-  EOT
+  # configuration = <<-EOT
+  #   export SPACELIFT_TOKEN=$(aws secretsmanager get-secret-value --secret-id "${aws_secretsmanager_secret.spacelift_credentials["SPACELIFT_TOKEN"].id}" --query SecretString --region eu-central-1 --output text)
+  #   export SPACELIFT_POOL_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id "${aws_secretsmanager_secret.spacelift_credentials["SPACELIFT_POOL_PRIVATE_KEY"].id}" --query SecretString --region eu-central-1 --output text)
+  #   export SPACELIFT_SENSITIVE_OUTPUT_UPLOAD_ENABLED=true
+  # EOT
 
-  ami_id                       = data.aws_ami.spacelift.id
+  configuration = ""
+
+  # completely overwrite userdata to support spacelift self-hosted
+  overwrite_userdata = templatefile("${path.module}/files/spacelift-userdata.sh", {
+      AWS_REGION = "eu-central-1"
+      BINARIES_BUCKET = "xxx"
+      RunLauncherAsSpaceliftUser = true
+      POWER_OFF_ON_ERROR = true
+      SECRET_NAME = ""
+      # optional settings
+      HTTP_PROXY_CONFIG = ""
+      HTTPS_PROXY_CONFIG = ""
+      NO_PROXY_CONFIG = ""
+      ADDITIONAL_ROOT_CAS_SECRET_NAME = ""
+      ADDITIONAL_ROOT_CAS = ""
+      CustomUserDataSecretName = ""
+    }
+  )
+
+  ami_id                       = "ami-042c73b746c928478" # data.aws_ami.spacelift.id
   ec2_instance_type            = "t3.small"
   volume_encryption            = true
   volume_encryption_kms_key_id = null
