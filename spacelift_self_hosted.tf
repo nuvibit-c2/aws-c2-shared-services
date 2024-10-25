@@ -196,8 +196,8 @@ module "spacelift_private_workers" {
   create_iam_role              = true
   enable_monitoring            = true
   enable_autoscaling           = false
-  min_size                     = 5
-  max_size                     = 5
+  min_size                     = 1
+  max_size                     = 1
   worker_pool_id               = module.ntc_spacelift_administration.private_worker_pools_by_name["self-hosted-workers"]
 
   providers = {
