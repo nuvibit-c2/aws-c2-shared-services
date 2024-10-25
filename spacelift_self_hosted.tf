@@ -47,7 +47,7 @@ data "aws_lb" "spacelift_alb" {
 # get latest spacelift ami
 data "aws_ami" "spacelift" {
   most_recent = true
-  name_regex  = "^spacelift-\\d{10}-arm64$"
+  name_regex  = "^spacelift-\\d{10}-x86_64$"
   owners      = ["643313122712"]
 
   filter {
@@ -62,7 +62,7 @@ data "aws_ami" "spacelift" {
 
   filter {
     name   = "architecture"
-    values = ["arm64"]
+    values = ["x86_64"]
   }
 }
 
