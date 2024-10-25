@@ -1,3 +1,7 @@
+locals {
+  spacelift_binaries_bucket = "183295411930-spacelift-downloads-a75097"
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ DATA
 # ---------------------------------------------------------------------------------------------------------------------
@@ -189,8 +193,8 @@ module "spacelift_private_workers" {
 
   # completely overwrite userdata to support spacelift self-hosted
   overwrite_userdata = templatefile("${path.module}/files/spacelift-userdata.sh", {
-    AWS_REGION                 = "eu-central-1"
-    BINARIES_BUCKET            = "183295411930-spacelift-downloads-a75097"
+    AWS_REGION                 = data.aws_region.default.name
+    BINARIES_BUCKET            = local.spacelift_binaries_bucket
     RunLauncherAsSpaceliftUser = true
     POWER_OFF_ON_ERROR         = true
     SECRET_NAME                = aws_secretsmanager_secret.spacelift_credentials.id
@@ -223,6 +227,11 @@ data "aws_iam_policy_document" "spacelift" {
     effect    = "Allow"
     actions   = ["secretsmanager:GetSecretValue"]
     resources = [aws_secretsmanager_secret.spacelift_credentials.arn]
+  }
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:GetObject"]
+    resources = ["${local.spacelift_binaries_bucket}/*"]
   }
 }
 
