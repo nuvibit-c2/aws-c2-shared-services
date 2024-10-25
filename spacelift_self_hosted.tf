@@ -206,7 +206,7 @@ module "spacelift_private_workers" {
     }
   )
 
-  ami_id                       = "ami-042c73b746c928478" # data.aws_ami.spacelift.id
+  ami_id                       = data.aws_ami.spacelift.id
   ec2_instance_type            = "t3.small"
   volume_encryption            = true
   volume_encryption_kms_key_id = null
