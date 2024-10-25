@@ -194,7 +194,6 @@ module "spacelift_private_workers" {
     RunLauncherAsSpaceliftUser = true
     POWER_OFF_ON_ERROR         = true
     SECRET_NAME                = aws_secretsmanager_secret.spacelift_credentials.id
-    CustomUserDataSecretName   = ""
     }
   )
 
