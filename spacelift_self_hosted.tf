@@ -188,7 +188,7 @@ module "spacelift_private_workers" {
   EOT
 
   ami_id                       = data.aws_ami.spacelift.id
-  ec2_instance_type            = "t4g.small"
+  ec2_instance_type            = "t3.small"
   volume_encryption            = true
   volume_encryption_kms_key_id = null
   security_groups              = [aws_security_group.private_workers.id]
