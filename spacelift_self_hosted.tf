@@ -190,7 +190,7 @@ module "spacelift_private_workers" {
   # completely overwrite userdata to support spacelift self-hosted
   overwrite_userdata = templatefile("${path.module}/files/spacelift-userdata.sh", {
     AWS_REGION                 = "eu-central-1"
-    BINARIES_BUCKET            = "xxx"
+    BINARIES_BUCKET            = "183295411930-spacelift-downloads-a75097"
     RunLauncherAsSpaceliftUser = true
     POWER_OFF_ON_ERROR         = true
     SECRET_NAME                = aws_secretsmanager_secret.spacelift_credentials.id
