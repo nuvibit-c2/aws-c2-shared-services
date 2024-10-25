@@ -36,58 +36,7 @@ configure_docker () {(
     usermod -aG docker spacelift 1>>/var/log/spacelift/info.log 2>>/var/log/spacelift/error.log
   fi
 
-  if [[ \"${HTTP_PROXY_CONFIG}\" != \"\" || \"${HTTPS_PROXY_CONFIG}\" != \"\" || \"${NO_PROXY_CONFIG}\" != \"\" ]]; then
-    echo \"Configuring HTTP proxy information for Docker\" >> /var/log/spacelift/info.log
-
-    mkdir -p /etc/systemd/system/docker.service.d 2>>/var/log/spacelift/error.log
-
-    echo \"[Service]\" > /etc/systemd/system/docker.service.d/http-proxy.conf 2>>/var/log/spacelift/error.log
-
-    if [[ \"${HTTP_PROXY_CONFIG}\" != \"\" ]]; then
-      echo \"Setting HTTP_PROXY environment variable\" >> /var/log/spacelift/info.log
-      echo \"Environment=\\\"HTTP_PROXY=${HTTP_PROXY_CONFIG}\\\"\" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    fi
-
-    if [[ \"${HTTPS_PROXY_CONFIG}\" != \"\" ]]; then
-      echo \"Setting HTTPS_PROXY environment variable\" >> /var/log/spacelift/info.log
-      echo \"Environment=\\\"HTTPS_PROXY=${HTTPS_PROXY_CONFIG}\\\"\" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    fi
-
-    if [[ \"${NO_PROXY_CONFIG}\" != \"\" ]]; then
-      echo \"Setting NO_PROXY environment variable\" >> /var/log/spacelift/info.log
-      echo \"Environment=\\\"NO_PROXY=${NO_PROXY_CONFIG}\\\"\" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    fi
-
-    echo \"Restarting Docker daemon to load proxy configuration\" >> /var/log/spacelift/info.log
-    systemctl daemon-reload 1>>/var/log/spacelift/info.log 2>>/var/log/spacelift/error.log
-    systemctl restart docker 1>>/var/log/spacelift/info.log 2>>/var/log/spacelift/error.log
-  fi
-
   echo \"Docker configuration is GO\" >> /var/log/spacelift/info.log
-)}
-
-load_custom_ca_certs () {(
-  set -e
-
-  if [[ \"${ADDITIONAL_ROOT_CAS_SECRET_NAME}\" != \"\" ]]; then
-    echo \"Loading custom root CA certificates from ${ADDITIONAL_ROOT_CAS_SECRET_NAME}\" >> /var/log/spacelift/info.log
-    local additional_root_cas
-    additional_root_cas=$(aws secretsmanager get-secret-value --region=${AWS_REGION} --secret-id ${ADDITIONAL_ROOT_CAS_SECRET_NAME} 2>>/var/log/spacelift/error.log | jq -r '.SecretString')
-    
-    if [[ \"$additional_root_cas\" = \"\" ]]; then
-      echo \"Warning: could not load custom root CA certificates from ${ADDITIONAL_ROOT_CAS_SECRET_NAME}. The error log may contain more information.\" >> /var/log/spacelift/info.log
-    fi
-
-    # Add the certificates to the system trust store
-    DECODED=$(echo \"$additional_root_cas\" | base64 -d)
-    echo \"$DECODED\" | jq -r '.caCertificates[]' | while read -r cert; do
-      echo \"$cert\" | base64 -d > /etc/pki/ca-trust/source/anchors/$(uuidgen).crt
-    done
-
-    sudo update-ca-trust
-
-    echo \"Custom root CA certificates are GO\" >> /var/log/spacelift/info.log
-  fi
 )}
 
 create_spacelift_launcher_script () {(
@@ -121,42 +70,6 @@ export SPACELIFT_METADATA_ami_id=\\$(ec2-metadata --ami-id | cut -d ' ' -f2)
 echo \"Retrieving EC2 ASG ID\" >> /var/log/spacelift/info.log
 export SPACELIFT_METADATA_asg_id=\\$(aws autoscaling --region=${AWS_REGION} describe-auto-scaling-instances --instance-ids \\$SPACELIFT_METADATA_instance_id | jq -r '.AutoScalingInstances[0].AutoScalingGroupName')
 
-if [[ \"${HTTP_PROXY_CONFIG}\" != \"\" || \"${HTTPS_PROXY_CONFIG}\" != \"\" || \"${NO_PROXY_CONFIG}\" != \"\" ]]; then
-  whitelisted_vars=()
-
-  echo \"Configuring HTTP proxy information\" >> /var/log/spacelift/info.log
-
-  if [[ \"${HTTP_PROXY_CONFIG}\" != \"\" ]]; then
-    echo \"Setting HTTP_PROXY environment variable\" >> /var/log/spacelift/info.log
-    export HTTP_PROXY=\"${HTTP_PROXY_CONFIG}\"
-    whitelisted_vars+=(\"HTTP_PROXY\")
-  fi
-
-  if [[ \"${HTTPS_PROXY_CONFIG}\" != \"\" ]]; then
-    echo \"Setting HTTPS_PROXY environment variable\" >> /var/log/spacelift/info.log
-    export HTTPS_PROXY=\"${HTTPS_PROXY_CONFIG}\"
-    whitelisted_vars+=(\"HTTPS_PROXY\")
-  fi
-
-  if [[ \"${NO_PROXY_CONFIG}\" != \"\" ]]; then
-    echo \"Setting NO_PROXY environment variable\" >> /var/log/spacelift/info.log
-    export NO_PROXY=\"${NO_PROXY_CONFIG}\"
-    whitelisted_vars+=(\"NO_PROXY\")
-  fi
-
-  formatted_whitelist=\\$(join_strings \",\" \"\\$${!whitelisted_vars[@]}\")
-  export SPACELIFT_WHITELIST_ENVS=\"\\$formatted_whitelist\"
-fi
-
-if [[ \"${ADDITIONAL_ROOT_CAS_SECRET_NAME}\" != \"\" ]]; then
-  echo \"Loading custom root CA certificates from ${ADDITIONAL_ROOT_CAS_SECRET_NAME}\" >> /var/log/spacelift/info.log
-  export ADDITIONAL_ROOT_CAS=\\$(aws secretsmanager get-secret-value --region=${AWS_REGION} --secret-id ${ADDITIONAL_ROOT_CAS_SECRET_NAME} 2>>/var/log/spacelift/error.log | jq -r '.SecretString')
-  
-  if [[ \"\\$ADDITIONAL_ROOT_CAS\" = \"\" ]]; then
-    echo \"Warning: could not load custom root CA certificates from ${ADDITIONAL_ROOT_CAS_SECRET_NAME}. The error log may contain more information.\" >> /var/log/spacelift/info.log
-  fi
-fi
-
 $custom_user_data
 
 echo \"Starting the Spacelift binary\" >> /var/log/spacelift/info.log
@@ -188,7 +101,6 @@ run_spacelift () {(
 configure_permissions
 download_launcher
 configure_docker
-load_custom_ca_certs
 create_spacelift_launcher_script
 run_spacelift
 

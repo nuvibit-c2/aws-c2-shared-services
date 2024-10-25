@@ -194,13 +194,7 @@ module "spacelift_private_workers" {
     RunLauncherAsSpaceliftUser = true
     POWER_OFF_ON_ERROR         = true
     SECRET_NAME                = aws_secretsmanager_secret.spacelift_credentials.id
-    # optional settings
-    HTTP_PROXY_CONFIG               = ""
-    HTTPS_PROXY_CONFIG              = ""
-    NO_PROXY_CONFIG                 = ""
-    ADDITIONAL_ROOT_CAS_SECRET_NAME = ""
-    ADDITIONAL_ROOT_CAS             = ""
-    CustomUserDataSecretName        = ""
+    CustomUserDataSecretName   = ""
     }
   )
 
