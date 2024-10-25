@@ -25,8 +25,8 @@ module "ntc_r53_spacelift_nuvibit_dev" {
       ttl  = 300
       alias = {
         enable_alias           = true
-        target_dns_name        = data.aws_lb.spacelift.dns_name
-        target_hosted_zone_id  = data.aws_lb.spacelift.zone_id
+        target_dns_name        = data.aws_lb.spacelift_alb.dns_name
+        target_hosted_zone_id  = data.aws_lb.spacelift_alb.zone_id
         evaluate_target_health = true
       }
     }
