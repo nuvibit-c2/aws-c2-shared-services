@@ -19,7 +19,7 @@ data "aws_subnets" "spacelift_private_subnets" {
   }
 
   filter {
-    name   = "tag:Name"
+    name = "tag:Name"
     values = [
       "Spacelift PrivateSubnet1",
       "Spacelift PrivateSubnet2",
@@ -122,9 +122,7 @@ module "ntc_spacelift_administration" {
 # ¦ SPACELIFT PRIVATE RUNNERS - CREDENTIALS
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_secretsmanager_secret" "spacelift_credentials" {
-  for_each = toset(["SPACELIFT_TOKEN", "SPACELIFT_POOL_PRIVATE_KEY"])
-
-  name = each.key
+  name = "ntc/spacelift-worker-pool"
 }
 
 data "aws_iam_policy_document" "spacelift_credentials" {
@@ -138,22 +136,22 @@ data "aws_iam_policy_document" "spacelift_credentials" {
     }
 
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = [for secret in aws_secretsmanager_secret.spacelift_credentials : secret.arn]
+    resources = [aws_secretsmanager_secret.spacelift_credentials.arn]
   }
 }
 
 resource "aws_secretsmanager_secret_policy" "spacelift_credentials" {
   for_each = toset(["SPACELIFT_TOKEN", "SPACELIFT_POOL_PRIVATE_KEY"])
 
-  secret_arn = aws_secretsmanager_secret.spacelift_credentials[each.key].arn
+  secret_arn = aws_secretsmanager_secret.spacelift_credentials.arn
   policy     = data.aws_iam_policy_document.spacelift_credentials.json
 }
 
 resource "aws_secretsmanager_secret_version" "spacelift_credentials" {
   for_each = toset(["SPACELIFT_TOKEN", "SPACELIFT_POOL_PRIVATE_KEY"])
 
-  secret_id     = aws_secretsmanager_secret.spacelift_credentials[each.key].id
-  secret_string = module.ntc_spacelift_administration.private_worker_credentials_by_pool_name["self-hosted-workers"][each.key]
+  secret_id     = aws_secretsmanager_secret.spacelift_credentials.id
+  secret_string = jsonencode(module.ntc_spacelift_administration.private_worker_credentials_by_pool_name["self-hosted-workers"])
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -191,18 +189,18 @@ module "spacelift_private_workers" {
 
   # completely overwrite userdata to support spacelift self-hosted
   overwrite_userdata = templatefile("${path.module}/files/spacelift-userdata.sh", {
-      AWS_REGION = "eu-central-1"
-      BINARIES_BUCKET = "xxx"
-      RunLauncherAsSpaceliftUser = true
-      POWER_OFF_ON_ERROR = true
-      SECRET_NAME = ""
-      # optional settings
-      HTTP_PROXY_CONFIG = ""
-      HTTPS_PROXY_CONFIG = ""
-      NO_PROXY_CONFIG = ""
-      ADDITIONAL_ROOT_CAS_SECRET_NAME = ""
-      ADDITIONAL_ROOT_CAS = ""
-      CustomUserDataSecretName = ""
+    AWS_REGION                 = "eu-central-1"
+    BINARIES_BUCKET            = "xxx"
+    RunLauncherAsSpaceliftUser = true
+    POWER_OFF_ON_ERROR         = true
+    SECRET_NAME                = aws_secretsmanager_secret.spacelift_credentials.id
+    # optional settings
+    HTTP_PROXY_CONFIG               = ""
+    HTTPS_PROXY_CONFIG              = ""
+    NO_PROXY_CONFIG                 = ""
+    ADDITIONAL_ROOT_CAS_SECRET_NAME = ""
+    ADDITIONAL_ROOT_CAS             = ""
+    CustomUserDataSecretName        = ""
     }
   )
 
@@ -231,7 +229,7 @@ data "aws_iam_policy_document" "spacelift" {
   statement {
     effect    = "Allow"
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = [for secret in aws_secretsmanager_secret.spacelift_credentials : secret.arn]
+    resources = [aws_secretsmanager_secret.spacelift_credentials.arn]
   }
 }
 
