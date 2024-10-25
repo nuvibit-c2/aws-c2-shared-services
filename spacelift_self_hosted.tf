@@ -231,7 +231,7 @@ data "aws_iam_policy_document" "spacelift" {
   statement {
     effect    = "Allow"
     actions   = ["s3:GetObject"]
-    resources = ["${local.spacelift_binaries_bucket}/*"]
+    resources = ["arn:aws:s3:::${local.spacelift_binaries_bucket}/*"]
   }
 }
 
