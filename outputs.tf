@@ -13,7 +13,7 @@ output "account_id" {
 #   value       = local.ntc_parameters
 # }
 
-output "spacelift_cert_arn" {
-  description = "ARN of certificate used for Spacelift deployment"
-  value       = aws_acm_certificate.spacelift.arn
-}
+# output "spacelift_cert_arn" {
+#   description = "ARN of certificate used for Spacelift deployment"
+#   value       = aws_acm_certificate.spacelift.arn
+# }
