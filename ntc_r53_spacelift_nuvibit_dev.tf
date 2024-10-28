@@ -20,10 +20,10 @@ module "ntc_r53_spacelift_nuvibit_dev" {
   dns_records = [
     {
       # apex record for spacelift self-hosted loadbalancer - check 'spacelift_self_hosted.tf'
-      name  = ""
-      type  = "A"
-      ttl   = 300
-      value = "53.53.53.53"
+      name   = ""
+      type   = "A"
+      ttl    = 300
+      values = ["53.53.53.53"]
       # alias = {
       #   enable_alias           = true
       #   target_dns_name        = data.aws_lb.spacelift_alb.dns_name
