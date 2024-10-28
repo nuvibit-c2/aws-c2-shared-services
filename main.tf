@@ -21,11 +21,11 @@ provider "aws" {
   region = "us-east-1"
 }
 
-provider "spacelift" {
-  api_key_endpoint = "https://spacelift.nuvibit.dev"
-  api_key_id       = "01JAZ0E21AXPEZEFCGP4SCCNN1"
-  api_key_secret   = var.spacelift_admin_token
-}
+# provider "spacelift" {
+#   api_key_endpoint = "https://spacelift.nuvibit.dev"
+#   api_key_id       = "01JAZ0E21AXPEZEFCGP4SCCNN1"
+#   api_key_secret   = var.spacelift_admin_token
+# }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ REQUIREMENTS
@@ -39,10 +39,10 @@ terraform {
       version               = "~> 5.0"
       configuration_aliases = []
     }
-    spacelift = {
-      source  = "spacelift-io/spacelift"
-      version = "~> 1.0"
-    }
+    # spacelift = {
+    #   source  = "spacelift-io/spacelift"
+    #   version = "~> 1.0"
+    # }
   }
 }
 
