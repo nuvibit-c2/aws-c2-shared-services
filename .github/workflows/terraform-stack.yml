@@ -1,0 +1,25 @@
+name: TERRAFORM STACK
+
+on:
+  # NOTE: pull requests are enforced and therefore checks will always run on pull requests
+  pull_request:
+    branches:
+      - main
+  # NOTE: Spacelift will execute the plan and apply independently (run checks only on pull requests)
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  terraform-stack:
+    uses: nuvibit/github-terraform-workflows/.github/workflows/terraform-stack.yml@v2
+    with:
+      # Use OpenTofu instead of Terraform 
+      use_opentofu: true
+      # Spacelift will execute the plan and apply
+      # Github Actions will only run static code checks 
+      enable_terraform_execution: false
+    secrets:
+      # GitHub App credentials used instead of default GITHUB_TOKEN
+      GH_APP_ID: ${{ secrets.GH_APP_ID }}
+      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
